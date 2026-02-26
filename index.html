@@ -1,0 +1,2354 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Noise</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Anton&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #601212;
+            /* Deep Red, adjusted for the image look */
+            overflow: hidden;
+            font-family: 'Times New Roman', serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            /* Prevent text selection for cleaner interaction */
+        }
+
+        .container {
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Title Styles */
+        h1 {
+            font-family: 'Anton', sans-serif;
+            font-size: 10rem;
+            line-height: 0.8;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+            position: relative;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+
+        h1:hover {
+            text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+            /* Simple jitter/shake effect preference */
+            animation: glitch-skew 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+            color: #f0f0f0;
+        }
+
+        /* Subtitle Styles */
+        .subtitle {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            margin-top: 1rem;
+            letter-spacing: 2px;
+            font-weight: 400;
+            opacity: 0.9;
+            transition: letter-spacing 0.5s ease, opacity 0.5s ease;
+        }
+
+        .subtitle:hover {
+            letter-spacing: 8px;
+            opacity: 1;
+        }
+
+        .highlight-serif {
+            font-style: italic;
+        }
+
+        /* Footer Styles */
+        .footer {
+            margin-top: 5rem;
+            font-family: sans-serif;
+            font-size: 1rem;
+            opacity: 0.6;
+            font-weight: 300;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer:hover {
+            opacity: 1;
+            transform: scale(1.1);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+
+        /* Glitch Animation Keyframes */
+        @keyframes glitch-skew {
+            0% {
+                transform: skew(0deg);
+            }
+
+            20% {
+                transform: skew(-2deg);
+            }
+
+            40% {
+                transform: skew(2deg);
+            }
+
+            60% {
+                transform: skew(-1deg);
+            }
+
+            80% {
+                transform: skew(1deg);
+            }
+
+            100% {
+                transform: skew(0deg);
+            }
+        }
+
+        /* ... existing styles ... */
+
+        /* Page Transition Styles */
+        .page {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            /* Hidden by default */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Page 2 Specific Styles */
+        .content-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            width: 90%;
+            padding: 2rem;
+            gap: 4rem;
+        }
+
+        .text-block {
+            flex: 1;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            line-height: 1.8;
+            text-align: justify;
+            text-transform: uppercase;
+        }
+
+        .image-block {
+            flex: 0 0 400px;
+            /* Fixed width for image container */
+        }
+
+        .cat-image {
+            width: 100%;
+            height: auto;
+            border-radius: 200px 200px 0 0;
+            /* Arch shape  */
+            border: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Character Hover Effect */
+        .char {
+            display: inline-block;
+            transition: color 0.2s ease, text-shadow 0.2s ease;
+            cursor: default;
+        }
+
+        .char:hover {
+            color: #ffcccc;
+            /* Light pinkish highlight */
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            transform: scale(1.1);
+        }
+
+        /* Underline designated words (manually added in logic if needed, 
+           but for now uniform hover is requested) */
+
+        /* ... existing styles ... */
+
+        /* Page 3 Specific Styles */
+        .carousel-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
+        }
+
+        .carousel-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            position: absolute;
+            top: 10%;
+            width: 100%;
+            text-align: center;
+            z-index: 100;
+        }
+
+        .scene {
+            width: 300px;
+            /* Width of one card */
+            height: 400px;
+            /* Height of one card */
+            position: relative;
+            transform-style: preserve-3d;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+
+        .carousel-item {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            left: 0;
+            top: 0;
+            /* background: rgba(255, 255, 255, 0.1); */
+            /* border: 2px solid white; */
+            text-align: center;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            /* Or visible depending on desired look */
+            background-color: white;
+            /* Card background */
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.5s;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .footer-instruction {
+            position: absolute;
+            bottom: 50px;
+            font-family: 'Inter', sans-serif;
+            font-style: italic;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 5rem;
+            }
+
+            .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .content-wrapper {
+                flex-direction: column-reverse;
+                gap: 2rem;
+            }
+
+            .image-block {
+                flex: 0 0 200px;
+                width: 200px;
+            }
+
+            .text-block {
+                font-size: 1.5rem;
+            }
+
+            /* Page 3 Mobile */
+            .carousel-title {
+                font-size: 2.5rem;
+                top: 5%;
+            }
+
+            .scene {
+                width: 200px;
+                height: 300px;
+            }
+
+            .carousel-item {
+                width: 200px;
+                height: 300px;
+            }
+
+            /* Page 4 Mobile */
+            .split-container {
+                flex-direction: column;
+            }
+
+            .split-section {
+                width: 100%;
+                height: 33.33vh;
+                border-right: none;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            .split-section:hover {
+                flex-grow: 1.5;
+                /* Less dramatic on mobile */
+            }
+
+            .split-title {
+                font-size: 3rem;
+            }
+        }
+
+        /* Page 4 Specific Styles */
+        .split-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: #601212;
+            /* Maintain base background */
+        }
+
+        .split-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            cursor: pointer;
+            transition: flex 0.6s cubic-bezier(0.25, 1, 0.5, 1), background-color 0.4s ease;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .split-section:last-child {
+            border-right: none;
+        }
+
+        .split-section:hover {
+            flex: 2;
+            /* Expands while others shrink */
+            background-color: #8B0000;
+            /* Darker red on hover */
+        }
+
+        .split-title {
+            color: white;
+            font-size: 5vw;
+            /* Responsive font size */
+            margin: 0;
+            white-space: nowrap;
+            transition: transform 0.4s ease, letter-spacing 0.4s ease;
+            pointer-events: none;
+            /* Let clicks pass to container */
+        }
+
+        .split-section:hover .split-title {
+            transform: scale(1.1);
+            letter-spacing: 5px;
+        }
+
+        /* Font variants */
+        .serif {
+            font-family: 'Playfair Display', serif;
+            font-style: normal;
+        }
+
+        .sans {
+            font-family: 'Anton', sans-serif;
+            /* Using Anton for the "Bold Sans" look */
+            text-transform: uppercase;
+        }
+
+        /* ====== Page 5: Poems Screen ====== */
+        .poems-screen {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            background-color: #1a1a1a;
+            overflow: hidden;
+        }
+
+        /* Left panel - poem display */
+        .poem-display {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+            position: relative;
+            background-color: #1a1a1a;
+            overflow: hidden;
+        }
+
+        .poem-display-inner {
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .poem-display-image {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            margin-bottom: 1.5rem;
+        }
+
+        .poem-display-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            margin: 0 0 0.3rem 0;
+            letter-spacing: 2px;
+        }
+
+        .poem-display-date {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #cc3333;
+            font-style: italic;
+            margin: 0;
+        }
+
+        .poem-placeholder {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            opacity: 0.4;
+            font-style: italic;
+        }
+
+        /* Home button */
+        .poems-home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 1.8rem;
+            color: white;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .poems-home-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        /* Divider */
+        .poems-divider {
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.15), transparent);
+            flex-shrink: 0;
+        }
+
+        /* Right panel - scrollable options */
+        .poem-options {
+            width: 45%;
+            max-width: 550px;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-sizing: border-box;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.2rem;
+            align-content: start;
+            background-color: #222;
+        }
+
+        /* Custom scrollbar for poem options */
+        .poem-options::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .poem-options::-webkit-scrollbar-track {
+            background: #333;
+            border-radius: 5px;
+        }
+
+        .poem-options::-webkit-scrollbar-thumb {
+            background: #666;
+            border-radius: 5px;
+        }
+
+        .poem-options::-webkit-scrollbar-thumb:hover {
+            background: #888;
+        }
+
+        /* Poem card */
+        .poem-card {
+            background: #601212;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+
+        .poem-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            background-color: #7a1a1a;
+        }
+
+        .poem-card.active {
+            outline: 3px solid #cc3333;
+            outline-offset: 2px;
+            background-color: #8B0000;
+        }
+
+        .poem-card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            text-align: center;
+            color: white;
+            line-height: 1.3;
+        }
+
+        /* ====== Page 6: Artworks Screen ====== */
+        .artworks-screen {
+            width: 100%;
+            height: 100vh;
+            background-color: #601212;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .artworks-home-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 20;
+            font-size: 1.8rem;
+            color: white;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .artworks-home-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .artworks-grid-wrapper {
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            padding: 70px 3rem 3rem 3rem;
+            box-sizing: border-box;
+        }
+
+        .artworks-grid-border {
+            border: 3px solid #b366ff;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .artworks-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 1.2rem;
+        }
+
+        /* Custom scrollbar for artworks */
+        .artworks-grid-wrapper::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .artworks-grid-wrapper::-webkit-scrollbar-track {
+            background: #4a0e0e;
+            border-radius: 6px;
+        }
+
+        .artworks-grid-wrapper::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 6px;
+        }
+
+        .artworks-grid-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #bbb;
+        }
+
+        /* Artwork card */
+        .artwork-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            aspect-ratio: 1;
+        }
+
+        .artwork-card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
+        }
+
+        .artwork-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* Lightbox overlay */
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-overlay.visible {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-image {
+            max-width: 80vw;
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.7);
+            object-fit: contain;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 25px;
+            right: 35px;
+            font-size: 2.5rem;
+            color: white;
+            background: none;
+            border: none;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            z-index: 1001;
+            line-height: 1;
+        }
+
+        .lightbox-close:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        /* ====== Page 7: Music Screen ====== */
+        .music-screen {
+            width: 100%;
+            height: 100vh;
+            background-color: #1a1a1a;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Top bar */
+        .music-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 28px;
+            background: rgba(26, 26, 26, 0.9);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            z-index: 20;
+            flex-shrink: 0;
+        }
+
+        .music-home-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.6rem;
+            color: white;
+            opacity: 0.7;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            padding: 0;
+        }
+
+        .music-home-btn:hover {
+            opacity: 1;
+            transform: scale(1.15);
+        }
+
+        .music-top-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 6px;
+            color: #cc3333;
+        }
+
+        /* Main content area */
+        .music-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Hero artwork panel */
+        .music-hero {
+            width: 42%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            background: linear-gradient(145deg, #601212 0%, #1a1a1a 100%);
+            overflow: hidden;
+        }
+
+        .music-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(0, 0, 0, 0.15) 2px,
+                    rgba(0, 0, 0, 0.15) 4px);
+            pointer-events: none;
+            z-index: 2;
+            animation: scanline-drift 8s linear infinite;
+        }
+
+        @keyframes scanline-drift {
+            0% {
+                transform: translateY(0);
+            }
+
+            100% {
+                transform: translateY(100px);
+            }
+        }
+
+        .music-hero-artwork {
+            width: 280px;
+            height: 280px;
+            background: #601212;
+            border: 2px solid rgba(204, 51, 51, 0.3);
+            position: relative;
+            z-index: 3;
+            overflow: hidden;
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6), 0 0 60px rgba(96, 18, 18, 0.3);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .music-hero-artwork:hover {
+            transform: scale(1.03);
+            box-shadow: 0 16px 56px rgba(0, 0, 0, 0.7), 0 0 80px rgba(139, 0, 0, 0.4);
+        }
+
+        .music-hero-artwork img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .music-hero-artwork .glitch-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, transparent 0%, rgba(204, 51, 51, 0.08) 50%, transparent 100%);
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .music-hero-artwork:hover .glitch-overlay {
+            opacity: 1;
+            animation: glitch-flash 0.4s steps(3) infinite;
+        }
+
+        @keyframes glitch-flash {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            33% {
+                transform: translate(-2px, 1px);
+            }
+
+            66% {
+                transform: translate(2px, -1px);
+            }
+
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .music-hero-info {
+            margin-top: 1.5rem;
+            text-align: center;
+            z-index: 3;
+            position: relative;
+        }
+
+        .music-hero-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin: 0;
+            color: white;
+        }
+
+        .music-hero-artist {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: #cc3333;
+            font-style: italic;
+            margin: 4px 0 0 0;
+            opacity: 0.9;
+        }
+
+        /* Track list panel */
+        .music-tracklist {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #222;
+            overflow: hidden;
+        }
+
+        .music-tracklist-header {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 60px;
+            padding: 12px 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            font-family: 'Anton', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .music-tracklist-body {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 1rem;
+        }
+
+        /* Scrollbar for tracklist */
+        .music-tracklist-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .music-tracklist-body::-webkit-scrollbar-track {
+            background: #2a2a2a;
+        }
+
+        .music-tracklist-body::-webkit-scrollbar-thumb {
+            background: #601212;
+            border-radius: 3px;
+        }
+
+        .music-tracklist-body::-webkit-scrollbar-thumb:hover {
+            background: #8B0000;
+        }
+
+        .music-track-row {
+            display: grid;
+            grid-template-columns: 40px 1fr 1fr 60px;
+            align-items: center;
+            padding: 14px 24px;
+            cursor: pointer;
+            transition: background-color 0.25s ease, transform 0.2s ease;
+            position: relative;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .music-track-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: #cc3333;
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .music-track-row:hover {
+            background-color: rgba(139, 0, 0, 0.25);
+        }
+
+        .music-track-row:hover::before {
+            transform: scaleY(1);
+        }
+
+        .music-track-row.playing {
+            background-color: rgba(96, 18, 18, 0.5);
+        }
+
+        .music-track-row.playing::before {
+            transform: scaleY(1);
+            animation: playing-pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes playing-pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.4;
+            }
+        }
+
+        .track-num {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .music-track-row.playing .track-num {
+            color: #cc3333;
+        }
+
+        .track-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .music-track-row.playing .track-title {
+            color: white;
+        }
+
+        .track-artist {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.45);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .track-duration {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.25);
+            text-align: right;
+            letter-spacing: 1px;
+        }
+
+        /* Track entrance animation */
+        .music-track-row {
+            opacity: 0;
+            transform: translateX(20px);
+            animation: track-slide-in 0.4s ease forwards;
+        }
+
+        @keyframes track-slide-in {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Bottom player bar */
+        .music-player-bar {
+            display: flex;
+            align-items: center;
+            padding: 14px 28px;
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border-top: 1px solid rgba(204, 51, 51, 0.15);
+            gap: 20px;
+            flex-shrink: 0;
+            z-index: 20;
+        }
+
+        .player-now-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 180px;
+        }
+
+        .player-now-thumb {
+            width: 44px;
+            height: 44px;
+            background: #601212;
+            clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .player-now-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-now-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .player-now-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: white;
+        }
+
+        .player-now-artist {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.75rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Playback controls */
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .player-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease;
+            padding: 0;
+            position: relative;
+        }
+
+        .player-btn:hover {
+            color: white;
+            transform: scale(1.15);
+        }
+
+        .player-btn.active {
+            color: #cc3333;
+            text-shadow: 0 0 8px rgba(204, 51, 51, 0.6);
+        }
+
+        .player-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: #cc3333;
+            border-radius: 50%;
+            box-shadow: 0 0 4px #cc3333;
+        }
+
+        .player-btn-play {
+            width: 42px;
+            height: 42px;
+            background: #cc3333;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .player-btn-play:hover {
+            background: #e04444;
+            transform: scale(1.1);
+        }
+
+        /* Progress bar */
+        .player-progress-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .player-time {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: rgba(255, 255, 255, 0.35);
+            min-width: 36px;
+        }
+
+        .player-progress-track {
+            flex: 1;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+            cursor: pointer;
+            clip-path: polygon(2px 0%, 100% 0%, calc(100% - 2px) 100%, 0% 100%);
+        }
+
+        .player-progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #cc3333, #8B0000);
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .player-progress-fill::after {
+            content: '';
+            position: absolute;
+            right: -5px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background: #cc3333;
+            clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            box-shadow: 0 0 8px rgba(204, 51, 51, 0.6);
+        }
+
+        /* Queue Panel */
+        .music-queue-panel {
+            position: absolute;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: calc(100% - 74px);
+            background: rgba(20, 20, 20, 0.95);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 15;
+            transition: right 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .music-queue-panel.open {
+            right: 0;
+        }
+
+        .queue-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .queue-header h3 {
+            font-family: 'Anton', sans-serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+        }
+
+        .queue-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0.5;
+            transition: opacity 0.2s;
+        }
+
+        .queue-close:hover {
+            opacity: 1;
+        }
+
+        .queue-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        /* Queue item styles */
+        .queue-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 24px;
+            cursor: grab;
+            transition: background 0.2s;
+        }
+
+        .queue-item:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .queue-item:active {
+            cursor: grabbing;
+        }
+
+        .queue-thumb {
+            width: 36px;
+            height: 36px;
+            clip-path: polygon(0 0, calc(100% - 4px) 0, 100% 4px, 100% 100%, 4px 100%, 0 calc(100% - 4px));
+        }
+
+        .queue-item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .queue-item-title {
+            font-family: 'Anton', sans-serif;
+            font-size: 0.8rem;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .queue-item-artist {
+            font-family: 'Playfair Display', serif;
+            font-size: 0.7rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .queue-item-remove {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        .queue-item-remove:hover {
+            color: #cc3333;
+        }
+
+        /* Add to Queue button in main list */
+        .add-to-queue-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0);
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.2s, transform 0.2s;
+            margin-right: 10px;
+        }
+
+        .music-track-row:hover .add-to-queue-btn {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .add-to-queue-btn:hover {
+            color: #cc3333 !important;
+            transform: scale(1.2);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .music-content {
+                flex-direction: column;
+            }
+
+            .music-hero {
+                width: 100%;
+                height: 40vh;
+                padding: 1rem;
+            }
+
+            .music-hero-artwork {
+                width: 180px;
+                height: 180px;
+            }
+
+            .music-hero-title {
+                font-size: 1.3rem;
+            }
+
+            .music-tracklist {
+                flex: 1;
+            }
+
+            .music-tracklist-header,
+            .music-track-row {
+                grid-template-columns: 30px 1fr 60px;
+            }
+
+            .track-artist {
+                display: none;
+            }
+
+            .music-player-bar {
+                padding: 10px 16px;
+                gap: 12px;
+            }
+
+            .player-now-info {
+                min-width: auto;
+            }
+
+            .player-now-text {
+                display: none;
+            }
+
+            .player-progress-area {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<!-- Page 1: Initial View -->
+<div id="page-1" class="page active" onclick="goToPage2()">
+    <div class="container">
+        <h1>CAT<span style="opacity:0.7">;</span>NOISE</h1>
+        <div class="subtitle">
+            THE ANATOMY OF <span class="highlight-serif">ARMAN’S</span> BRAIN
+        </div>
+
+        <div class="footer">
+            click anywhere
+        </div>
+    </div>
+</div>
+<!-- Page 2: Text & Image -->
+<div id="page-2" class="page">
+    <h2 style="position: absolute; top: 50px; left: 50%; transform: translateX(-50%); font-size: 1.5rem; opacity: 0.8;">this is a loading screen</h2>
+    <div class="content-wrapper">
+        <div class="text-block" id="hover-text">
+            <p>CATNOISE IS WHERE MY MIND WANDERS AND WORDS REVERBERATE.<br> INSIDE LIVES MY ART AND POEMS—MADE FROM
+                IMPULSE,<br>
+                BLUR, AND SOFT REBELLION.<br> MY ART IS NOT MEANT TO CLARIFY, ONLY TO BE FELT.<br> EVERY PIECE LEAVES
+                ITS TRACE.
+            </p>
+        </div>
+        <div class="image-block">
+            <!-- PASTE YOUR IMAGE ADDRESS INSIDE THE SRC ATTRIBUTE BELOW -->
+            <img src="images/ada.jpg" alt="Cat art placeholder"
+                class="cat-image">
+        </div>
+    </div>
+</div>
+
+<!-- Page 3: Highlights Carousel -->
+<div id="page-3" class="page">
+    <div class="carousel-container">
+        <h1 class="carousel-title">HIGHLIGHTS</h1>
+
+        <div class="scene">
+            <div class="carousel" id="carousel">
+
+                <div class="carousel-item"><img
+                        src="images/COSMOPOSTER.jfif"
+                        alt="Art 1"></div>
+                <div class="carousel-item"><img
+                        src="images/hopeful.jfif"
+                        alt="Art 2">
+                </div>
+                <div class="carousel-item"><img
+                        src="images/ds.jfif" alt="Art 3">
+                </div>
+                <div class="carousel-item"><img
+                        src="images/tattoo.jfif"
+                        alt="Art 4"></div>
+                <div class="carousel-item"><img
+                        src="images/raked%20flower.jfif"
+                        alt="Art 5"></div>
+            </div>
+        </div>
+
+        <div class="footer-instruction" onclick="goToPage4()">
+            click anywhere to continue
+        </div>
+    </div>
+</div>
+
+<!-- Page 4: Navigation Menu -->
+<div id="page-4" class="page">
+    <div class="split-container">
+        <div class="split-section" onclick="handleNavClick('POEMS')">
+            <h1 class="split-title serif">POEMS</h1>
+        </div>
+        <div class="split-section" onclick="handleNavClick('ARTWORKS')">
+            <h1 class="split-title serif">ARTWORKS</h1>
+        </div>
+        <div class="split-section" onclick="handleNavClick('MUSIC')">
+            <h1 class="split-title sans">MUSIC</h1>
+        </div>
+    </div>
+</div>
+
+<!-- Page 5: Poems Screen -->
+<div id="page-5" class="page">
+    <div class="poems-screen">
+        <!-- Left: Display area -->
+        <div class="poem-display">
+            <button class="poems-home-btn" onclick="goBackToPage4()" title="Back">&#8962;</button>
+            <div class="poem-display-inner" id="poem-display-area">
+                <p class="poem-placeholder">Select a poem to view</p>
+            </div>
+        </div>
+
+        <div class="poems-divider"></div>
+
+        <!-- Right: Scrollable poem options -->
+        <div class="poem-options" id="poem-options-grid">
+            <!-- Poem cards are generated by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Page 6: Artworks Screen -->
+<div id="page-6" class="page">
+    <div class="artworks-screen">
+        <button class="artworks-home-btn" onclick="goBackToPage4FromArt()" title="Back">&#8962;</button>
+
+        <div class="artworks-grid-wrapper">
+            <div class="artworks-grid-border">
+                <div class="artworks-grid" id="artworks-grid">
+                    <!-- Artwork cards generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Lightbox overlay -->
+        <div class="lightbox-overlay" id="lightbox-overlay" onclick="closeLightbox()">
+            <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+            <img class="lightbox-image" id="lightbox-image" src="" alt="Artwork view" onclick="event.stopPropagation()">
+        </div>
+    </div>
+</div>
+
+<!-- Page 7: Music Screen -->
+<div id="page-7" class="page">
+    <div class="music-screen">
+        <!-- Top bar -->
+        <div class="music-top-bar">
+            <button class="music-home-btn" onclick="goBackToPage4FromMusic()" title="Back">&#8962;</button>
+            <span class="music-top-title">MUSIC</span>
+            <div style="width: 40px"></div> <!-- Spacer to keep title centered -->
+        </div>
+
+        <!-- Main content -->
+        <div class="music-content">
+            <!-- Hero artwork -->
+            <div class="music-hero">
+                <div class="music-hero-artwork" id="music-hero-artwork">
+                    <div class="glitch-overlay"></div>
+                </div>
+                <div class="music-hero-info">
+                    <h2 class="music-hero-title" id="music-hero-title">SELECT A TRACK</h2>
+                    <p class="music-hero-artist" id="music-hero-artist">— cat;noise —</p>
+                </div>
+            </div>
+
+            <!-- Track list -->
+            <div class="music-tracklist">
+                <div class="music-tracklist-header">
+                    <span>#</span>
+                    <span>TITLE</span>
+                    <span>ARTIST</span>
+                    <span style="text-align:right">TIME</span>
+                </div>
+                <div class="music-tracklist-body" id="music-tracklist-body">
+                    <!-- Tracks generated by JS -->
+                </div>
+            </div>
+
+            <!-- Queue Panel -->
+            <div class="music-queue-panel" id="music-queue-panel">
+                <div class="queue-header">
+                    <h3>Next Up</h3>
+                    <button class="queue-close" onclick="toggleQueue()">&#10005;</button>
+                </div>
+                <div class="queue-body" id="music-queue-body">
+                    <!-- Queue items generated by JS -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom player bar -->
+        <div class="music-player-bar">
+            <div class="player-now-info">
+                <div class="player-now-thumb" id="player-now-thumb"></div>
+                <div class="player-now-text">
+                    <span class="player-now-title" id="player-now-title">—</span>
+                    <span class="player-now-artist" id="player-now-artist">—</span>
+                </div>
+            </div>
+
+            <div class="player-controls">
+                <button class="player-btn" id="shuffle-btn" onclick="toggleShuffle()" title="Shuffle">&#128256;</button>
+                <button class="player-btn" onclick="prevTrack()">&#9198;</button>
+                <button class="player-btn-play" id="player-play-btn" onclick="togglePlay()">&#9654;</button>
+                <button class="player-btn" onclick="nextTrack()">&#9197;</button>
+                <button class="player-btn" id="queue-btn" onclick="toggleQueue()" title="Queue">&#128220;</button>
+            </div>
+
+            <div class="player-progress-area">
+                <span class="player-time" id="player-time-current">0:00</span>
+                <div class="player-progress-track" onclick="seekTrack(event)">
+                    <div class="player-progress-fill" id="player-progress-fill"></div>
+                </div>
+                <span class="player-time" id="player-time-total">0:00</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Page Navigation Logic
+    function goToPage2() {
+        const p1 = document.getElementById('page-1');
+        const p2 = document.getElementById('page-2');
+
+        // Fade out Page 1
+        p1.classList.remove('active');
+
+        // Wait for transition, then show Page 2
+        setTimeout(() => {
+            p1.style.display = 'none';
+            p2.style.display = 'flex';
+            // Trigger reflow
+            void p2.offsetWidth;
+            p2.classList.add('active');
+
+            // Initialize Page 2 effects
+            initPage2();
+        }, 500);
+    }
+
+    function goToPage3() {
+        const p2 = document.getElementById('page-2');
+        const p3 = document.getElementById('page-3');
+
+        p2.classList.remove('active');
+
+        setTimeout(() => {
+            p2.style.display = 'none';
+            p3.style.display = 'flex';
+            void p3.offsetWidth;
+            p3.classList.add('active');
+
+            // Initialize Page 3 effects
+            initPage3();
+        }, 500);
+    }
+
+
+
+    // Page 2 Logic
+    function initPage2() {
+        const textContainer = document.getElementById('hover-text');
+        // Read text from the HTML <p> tag instead of hardcoded string
+        const rawText = textContainer.innerText.trim();
+
+        // Clear existing content
+        textContainer.innerHTML = '';
+
+        // Wrap each letter in a span
+        rawText.split('').forEach(char => {
+            if (char === '\n') {
+                textContainer.appendChild(document.createElement('br'));
+            } else {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.className = 'char';
+                if (char === ' ') span.style.width = '0.5em'; // Preserve spaces
+                textContainer.appendChild(span);
+            }
+        });
+
+        // Start 8s timer for auto transition
+        setTimeout(() => {
+            goToPage3();
+        }, 8000);
+    }
+
+    // Page 3 Logic
+    let carouselInterval;
+    function initPage3() {
+        const carousel = document.getElementById('carousel');
+        const items = document.querySelectorAll('.carousel-item');
+        const itemCount = items.length;
+        const radius = 300; // Distance from center
+        let angle = 0;
+
+        // Positioning items in 3D circle
+        items.forEach((item, index) => {
+            const theta = (360 / itemCount) * index;
+            item.style.transform = `rotateY(${theta}deg) translateZ(${radius}px)`;
+        });
+
+        // Auto Rotation
+        carouselInterval = setInterval(() => {
+            angle -= 0.5; // continuous rotation speed
+            carousel.style.transform = `rotateY(${angle}deg)`;
+        }, 20);
+
+        // Click Anywhere Listener
+        document.addEventListener('click', handleCarouselClick);
+    }
+
+
+
+    function goToPage4() {
+        const p3 = document.getElementById('page-3');
+        const p4 = document.getElementById('page-4');
+
+        // Stop the carousel rotation if it's still running (safety check)
+        if (typeof carouselInterval !== 'undefined') clearInterval(carouselInterval);
+
+        p3.classList.remove('active');
+
+        setTimeout(() => {
+            p3.style.display = 'none';
+            p4.style.display = 'flex';
+            void p4.offsetWidth;
+            p4.classList.add('active');
+        }, 500);
+    }
+
+    function handleNavClick(section) {
+        if (section === 'POEMS') {
+            goToPage5();
+        } else if (section === 'ARTWORKS') {
+            goToPage6();
+        } else if (section === 'MUSIC') {
+            goToPage7();
+        }
+    }
+
+    function goToPage5() {
+        const p4 = document.getElementById('page-4');
+        const p5 = document.getElementById('page-5');
+
+        p4.classList.remove('active');
+        setTimeout(() => {
+            p4.style.display = 'none';
+            p5.style.display = 'flex';
+            void p5.offsetWidth;
+            p5.classList.add('active');
+            initPoemsPage();
+        }, 500);
+    }
+
+    function goBackToPage4() {
+        const p5 = document.getElementById('page-5');
+        const p4 = document.getElementById('page-4');
+
+        p5.classList.remove('active');
+        setTimeout(() => {
+            p5.style.display = 'none';
+            p4.style.display = 'flex';
+            void p4.offsetWidth;
+            p4.classList.add('active');
+        }, 500);
+    }
+
+    // Lalagyan ng mga poems
+    const poemsData = [
+        {
+            title: 'How I Live',
+            date: 'January 2026',
+            image: 'images/how%20i%20live.jpg'
+        },
+        {
+            title: 'Ink on my Skin',
+            date: 'February 2026',
+            image: 'images/tattoo.jfif'
+        },
+        {
+            title: 'Rockstar',
+            date: 'January 2026',
+            image: "images/rockstar.jfif"
+        },
+        {
+            title: 'One Day',
+            date: 'December 2025',
+            image: "images/hopeful.jfif"
+        },
+        {
+            title: '!!!',
+            date: 'November 2025',
+            image: "images/gg.jfif"
+        },
+        {
+            title: 'No Smoking',
+            date: 'October 2025',
+            image: "images/ds.jfif"
+        },
+        {
+            title: 'Arman Flower',
+            date: 'September 2025',
+            image: "images/arman%20flower.jfif"
+        },
+        {
+            title: 'Abril Flower',
+            date: 'August 2025',
+            image: "images/aoril%20flower.jfif"
+        },
+    ];
+
+    let activeCardIndex = null;
+
+    function initPoemsPage() {
+        const grid = document.getElementById('poem-options-grid');
+        grid.innerHTML = '';
+
+        poemsData.forEach((poem, index) => {
+            const card = document.createElement('div');
+            card.className = 'poem-card';
+            card.onclick = () => selectPoem(index);
+
+            card.innerHTML = `
+                <div class="poem-card-title">${poem.title}</div>
+            `;
+
+            grid.appendChild(card);
+        });
+    }
+
+    function selectPoem(index) {
+        const poem = poemsData[index];
+        const display = document.getElementById('poem-display-area');
+
+        display.innerHTML = `
+            <img src="${poem.image}" alt="${poem.title}" class="poem-display-image">
+            <h2 class="poem-display-title">${poem.title}</h2>
+            <p class="poem-display-date">${poem.date}</p>
+        `;
+
+        // Update active card styling
+        const cards = document.querySelectorAll('.poem-card');
+        cards.forEach(c => c.classList.remove('active'));
+        cards[index].classList.add('active');
+        activeCardIndex = index;
+    }
+
+    // ... (rest of logic) ...
+
+    function handleCarouselClick(e) {
+        // Clean up listener to avoid multiple triggers
+        document.removeEventListener('click', handleCarouselClick);
+        clearInterval(carouselInterval); // Stop rotation
+        goToPage4();
+    }
+
+    // ====== Artworks Page Logic ======
+
+    // lagayan ng mga artworks
+    const artworksData = [
+        "images/ada.jpg",
+        "images/anxiety.jfif",
+        "images/aoril%20flower.jfif",
+        "images/arman%20flower.jfif",
+        "images/ARAWARAW.jfif",
+        "images/COSMOC.jfif",
+        "images/COSMOPOSTER.jfif",
+        "images/ds.jfif",
+        "images/gg.jfif",
+        "images/hopeful.jfif",
+        "images/KAHITSANPWEDE.jfif",
+        "images/like%20a%20star.jfif",
+        "images/raked%20flower.jfif",
+        "images/RANDOM%20SUNSET%201.jfif",
+        "images/RANDOM%20SUNSET%202.jfif",
+        "images/RANDOM%20SUNSET%203.jfif",
+        "images/rockstar.jfif",
+        "images/tattoo.jfif",
+        "images/tattoos.jfif",
+        "images/TIME%20IS%20NOW.jfif",
+        "images/why.jfif",
+    ];
+
+    function goToPage6() {
+        const p4 = document.getElementById('page-4');
+        const p6 = document.getElementById('page-6');
+
+        p4.classList.remove('active');
+        setTimeout(() => {
+            p4.style.display = 'none';
+            p6.style.display = 'flex';
+            void p6.offsetWidth;
+            p6.classList.add('active');
+            initArtworksPage();
+        }, 500);
+    }
+
+    function goBackToPage4FromArt() {
+        const p6 = document.getElementById('page-6');
+        const p4 = document.getElementById('page-4');
+
+        p6.classList.remove('active');
+        setTimeout(() => {
+            p6.style.display = 'none';
+            p4.style.display = 'flex';
+            void p4.offsetWidth;
+            p4.classList.add('active');
+        }, 500);
+    }
+
+    function initArtworksPage() {
+        const grid = document.getElementById('artworks-grid');
+        grid.innerHTML = '';
+
+        artworksData.forEach((imgSrc, index) => {
+            const card = document.createElement('div');
+            card.className = 'artwork-card';
+            card.onclick = () => openLightbox(imgSrc);
+            card.innerHTML = `<img src="${imgSrc}" alt="Artwork ${index + 1}">`;
+            grid.appendChild(card);
+        });
+    }
+
+    function openLightbox(imgSrc) {
+        const overlay = document.getElementById('lightbox-overlay');
+        const img = document.getElementById('lightbox-image');
+        img.src = imgSrc;
+        overlay.style.display = 'flex';
+        // Trigger reflow for transition
+        void overlay.offsetWidth;
+        overlay.classList.add('visible');
+    }
+
+    function closeLightbox() {
+        const overlay = document.getElementById('lightbox-overlay');
+        overlay.classList.remove('visible');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+
+    // ====== Music Page Logic ======
+
+    // ╔══════════════════════════════════════════════════════════════╗
+    // ║  ADD YOUR SONGS HERE                                        ║
+    // ║  For each track, fill in:                                   ║
+    // ║    title  — song name                                       ║
+    // ║    artist — artist name                                     ║
+    // ║    image  — path to cover art image                         ║
+    // ║    audio  — path to your .mp3 or .wav file                  ║
+    // ║                                                             ║
+    // ║  The 'duration' field is auto-detected from the audio file  ║
+    // ║  so you don't need to set it manually.                      ║
+    // ╚══════════════════════════════════════════════════════════════╝
+
+    const musicData = [
+        {
+            title: 'Anong oras na',
+            artist: 'Blaster',
+            image: 'images/anxiety.jfif',
+            audio: 'audio/Anong%20oras%20na.mp3'
+        },
+        {
+            title: 'Dilim',
+            artist: 'Zild',
+            image: 'images/like%20a%20star.jfif',
+            audio: 'audio/Dilim.mp3'
+        },
+        {
+            title: 'Harvey',
+            artist: 'Hers',
+            image: 'images/rockstar.jfif',
+            audio: 'audio/Hers.mp3'
+        },
+        {
+            title: 'Another One',
+            artist: 'Mac Demarco',
+            image: 'images/tattoos.jfif',
+            audio: 'audio/Another%20one.mp3'
+        },
+        {
+            title: 'Huwag na huwag mong sasabihin',
+            artist: 'Kitchie Nadal',
+            image: 'images/arman%20flower.jfif',
+            audio: 'audio/Huwag%20na%20huwag%20mong%20sasabihin.mp3'
+        },
+
+    ];
+
+    // HTML5 Audio element for real playback
+    const audioPlayer = new Audio();
+    let currentTrackIndex = -1;
+    let isPlaying = false;
+    let progressAnimFrame = null;
+    let shuffleMode = false;
+    let playbackQueue = [];
+    let isQueueOpen = false;
+
+    // When a track ends naturally, auto-advance to next
+    audioPlayer.addEventListener('ended', () => {
+        nextTrack();
+    });
+
+    function goToPage7() {
+        const p4 = document.getElementById('page-4');
+        const p7 = document.getElementById('page-7');
+
+        p4.classList.remove('active');
+        setTimeout(() => {
+            p4.style.display = 'none';
+            p7.style.display = 'flex';
+            void p7.offsetWidth;
+            p7.classList.add('active');
+            initMusicPage();
+        }, 500);
+    }
+
+    function goBackToPage4FromMusic() {
+        const p7 = document.getElementById('page-7');
+        const p4 = document.getElementById('page-4');
+
+        // Stop audio and progress tracking
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        stopProgressLoop();
+        isPlaying = false;
+
+        p7.classList.remove('active');
+        setTimeout(() => {
+            p7.style.display = 'none';
+            p4.style.display = 'flex';
+            void p4.offsetWidth;
+            p4.classList.add('active');
+        }, 500);
+    }
+
+    function initMusicPage() {
+        const body = document.getElementById('music-tracklist-body');
+        body.innerHTML = '';
+
+        musicData.forEach((track, index) => {
+            const row = document.createElement('div');
+            row.className = 'music-track-row';
+            row.style.animationDelay = `${index * 0.06}s`;
+            row.onclick = () => playTrack(index);
+
+            row.innerHTML = `
+                <span class="track-num">${String(index + 1).padStart(2, '0')}</span>
+                <span class="track-title">${track.title}</span>
+                <span class="track-artist">${track.artist}</span>
+                <div style="display: flex; align-items: center; justify-content: flex-end;">
+                    <button class="add-to-queue-btn" onclick="event.stopPropagation(); addToQueue(${index})" title="Add to Queue">+</button>
+                    <span class="track-duration">—:——</span>
+                </div>
+            `;
+
+            body.appendChild(row);
+        });
+
+        // Reset hero to default state
+        document.getElementById('music-hero-artwork').innerHTML = '<div class="glitch-overlay"></div>';
+        document.getElementById('music-hero-title').textContent = 'SELECT A TRACK';
+        document.getElementById('music-hero-artist').textContent = '— cat;noise —';
+        document.getElementById('player-now-title').textContent = '—';
+        document.getElementById('player-now-artist').textContent = '—';
+        document.getElementById('player-now-thumb').innerHTML = '';
+        document.getElementById('player-progress-fill').style.width = '0%';
+        document.getElementById('player-time-current').textContent = '0:00';
+        document.getElementById('player-time-total').textContent = '0:00';
+        document.getElementById('player-play-btn').innerHTML = '&#9654;';
+        currentTrackIndex = -1;
+        isPlaying = false;
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+        stopProgressLoop();
+
+        // Pre-load durations for tracks that have audio paths
+        musicData.forEach((track, index) => {
+            if (track.audio) {
+                const tempAudio = new Audio();
+                tempAudio.preload = 'metadata';
+                tempAudio.src = track.audio;
+                tempAudio.addEventListener('loadedmetadata', () => {
+                    const rows = document.querySelectorAll('.music-track-row');
+                    if (rows[index]) {
+                        const durSpan = rows[index].querySelector('.track-duration');
+                        if (durSpan) durSpan.textContent = formatTime(tempAudio.duration);
+                    }
+                });
+            }
+        });
+    }
+
+    function playTrack(index) {
+        const track = musicData[index];
+        currentTrackIndex = index;
+
+        // Update hero
+        const artwork = document.getElementById('music-hero-artwork');
+        artwork.innerHTML = `<img src="${track.image}" alt="${track.title}"><div class="glitch-overlay"></div>`;
+        document.getElementById('music-hero-title').textContent = track.title;
+        document.getElementById('music-hero-artist').textContent = track.artist;
+
+        // Update player bar info
+        document.getElementById('player-now-title').textContent = track.title;
+        document.getElementById('player-now-artist').textContent = track.artist;
+        document.getElementById('player-now-thumb').innerHTML = `<img src="${track.image}" alt="${track.title}">`;
+        document.getElementById('player-time-current').textContent = '0:00';
+
+        // Highlight active row
+        const rows = document.querySelectorAll('.music-track-row');
+        rows.forEach(r => r.classList.remove('playing'));
+        if (index >= 0 && index < rows.length) {
+            rows[index].classList.add('playing');
+        }
+
+        // Load and play audio
+        if (track.audio) {
+            audioPlayer.src = track.audio;
+            audioPlayer.load();
+
+            audioPlayer.onloadedmetadata = () => {
+                document.getElementById('player-time-total').textContent = formatTime(audioPlayer.duration);
+                // Also update the duration in the track list row
+                const durSpan = rows[index].querySelector('.track-duration');
+                if (durSpan) durSpan.textContent = formatTime(audioPlayer.duration);
+            };
+
+            audioPlayer.play().catch(() => {
+                // Autoplay might be blocked — user needs to click play
+                console.log('Autoplay blocked. Click play to start.');
+            });
+
+            isPlaying = true;
+            document.getElementById('player-play-btn').innerHTML = '&#9646;&#9646;';
+            startProgressLoop();
+        } else {
+            // No audio file — show visual feedback
+            audioPlayer.pause();
+            audioPlayer.currentTime = 0;
+            isPlaying = false;
+            document.getElementById('player-play-btn').innerHTML = '&#9654;';
+            document.getElementById('player-time-total').textContent = '—:——';
+            document.getElementById('player-progress-fill').style.width = '0%';
+            stopProgressLoop();
+            console.log(`No audio file set for "${track.title}". Add a path to the 'audio' field in musicData.`);
+        }
+    }
+
+    function togglePlay() {
+        if (currentTrackIndex === -1) {
+            playTrack(0);
+            return;
+        }
+
+        const track = musicData[currentTrackIndex];
+        if (!track.audio) return; // No audio to play
+
+        if (isPlaying) {
+            audioPlayer.pause();
+            isPlaying = false;
+            document.getElementById('player-play-btn').innerHTML = '&#9654;';
+            stopProgressLoop();
+        } else {
+            audioPlayer.play().catch(() => { });
+            isPlaying = true;
+            document.getElementById('player-play-btn').innerHTML = '&#9646;&#9646;';
+            startProgressLoop();
+        }
+    }
+
+    function nextTrack() {
+        if (musicData.length === 0) return;
+
+        // 1. Check Queue first
+        if (playbackQueue.length > 0) {
+            const nextTrackIndex = playbackQueue[0];
+            playbackQueue.shift(); // Remove from queue
+            renderQueue();
+            playTrack(nextTrackIndex);
+            return;
+        }
+
+        // 2. Continuous Play Logic
+        let next;
+        if (shuffleMode) {
+            next = Math.floor(Math.random() * musicData.length);
+            // Try not to repeat same track if multiple tracks exist
+            if (musicData.length > 1 && next === currentTrackIndex) {
+                next = (next + 1) % musicData.length;
+            }
+        } else {
+            next = (currentTrackIndex + 1) % musicData.length;
+        }
+        playTrack(next);
+    }
+
+    function prevTrack() {
+        if (musicData.length === 0) return;
+        // If more than 3 seconds in, restart current track
+        if (audioPlayer.currentTime > 3) {
+            audioPlayer.currentTime = 0;
+            return;
+        }
+
+        let prev;
+        if (shuffleMode) {
+            prev = Math.floor(Math.random() * musicData.length);
+        } else {
+            prev = currentTrackIndex <= 0 ? musicData.length - 1 : currentTrackIndex - 1;
+        }
+        playTrack(prev);
+    }
+
+    function toggleShuffle() {
+        shuffleMode = !shuffleMode;
+        const btn = document.getElementById('shuffle-btn');
+        if (shuffleMode) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    }
+
+    function toggleQueue() {
+        isQueueOpen = !isQueueOpen;
+        const panel = document.getElementById('music-queue-panel');
+        const btn = document.getElementById('queue-btn');
+        if (isQueueOpen) {
+            panel.classList.add('open');
+            btn.classList.add('active');
+            renderQueue();
+        } else {
+            panel.classList.remove('open');
+            btn.classList.remove('active');
+        }
+    }
+
+    function addToQueue(index) {
+        playbackQueue.push(index);
+        renderQueue();
+
+        // Show a brief feedback on the button if possible, 
+        // but for now just opening the queue or simple flash is fine.
+        if (!isQueueOpen) {
+            // Optional: peek queue or just flash the icon
+            const btn = document.getElementById('queue-btn');
+            btn.style.transform = 'scale(1.3)';
+            setTimeout(() => btn.style.transform = '', 200);
+        }
+    }
+
+    function removeFromQueue(qIndex) {
+        playbackQueue.splice(qIndex, 1);
+        renderQueue();
+    }
+
+    function renderQueue() {
+        const body = document.getElementById('music-queue-body');
+        body.innerHTML = '';
+
+        if (playbackQueue.length === 0) {
+            body.innerHTML = '<p style="text-align:center; opacity: 0.3; margin-top: 40px; font-style: italic;">Queue is empty</p>';
+            return;
+        }
+
+        playbackQueue.forEach((trackIndex, qIndex) => {
+            const track = musicData[trackIndex];
+            const item = document.createElement('div');
+            item.className = 'queue-item';
+            item.draggable = true;
+
+            // Drag and drop events
+            item.ondragstart = (e) => {
+                e.dataTransfer.setData('text/plain', qIndex);
+                item.style.opacity = '0.4';
+            };
+            item.ondragend = () => {
+                item.style.opacity = '1';
+                const items = document.querySelectorAll('.queue-item');
+                items.forEach(i => i.style.borderTop = '');
+            };
+            item.ondragover = (e) => {
+                e.preventDefault();
+                item.style.borderTop = '2px solid #cc3333';
+            };
+            item.ondragleave = () => {
+                item.style.borderTop = '';
+            };
+            item.ondrop = (e) => {
+                e.preventDefault();
+                const fromIndex = parseInt(e.dataTransfer.getData('text/plain'));
+                const toIndex = qIndex;
+                if (fromIndex !== toIndex) {
+                    const movedItem = playbackQueue.splice(fromIndex, 1)[0];
+                    playbackQueue.splice(toIndex, 0, movedItem);
+                    renderQueue();
+                }
+            };
+
+            item.innerHTML = `
+                <div class="queue-thumb">
+                    <img src="${track.image}" alt="${track.title}" style="width:100%; height:100%; object-fit:cover;">
+                </div>
+                <div class="queue-item-info">
+                    <span class="queue-item-title">${track.title}</span>
+                    <span class="queue-item-artist">${track.artist}</span>
+                </div>
+                <button class="queue-item-remove" onclick="removeFromQueue(${qIndex})">&#10005;</button>
+            `;
+            body.appendChild(item);
+        });
+    }
+
+    function shuffleTracks() {
+        // This was the old function, keeping it for compatibility if needed elsewhere 
+        // but now it just triggers play on a random track.
+        const randomIndex = Math.floor(Math.random() * musicData.length);
+        playTrack(randomIndex);
+    }
+
+    // Time formatting
+    function formatTime(seconds) {
+        const m = Math.floor(seconds / 60);
+        const s = Math.floor(seconds % 60);
+        return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    // Real-time progress bar using requestAnimationFrame
+    function startProgressLoop() {
+        stopProgressLoop();
+
+        function updateProgress() {
+            if (!isPlaying) return;
+            const current = audioPlayer.currentTime;
+            const total = audioPlayer.duration || 1;
+            const pct = Math.min((current / total) * 100, 100);
+
+            document.getElementById('player-progress-fill').style.width = pct + '%';
+            document.getElementById('player-time-current').textContent = formatTime(current);
+
+            progressAnimFrame = requestAnimationFrame(updateProgress);
+        }
+
+        progressAnimFrame = requestAnimationFrame(updateProgress);
+    }
+
+    function stopProgressLoop() {
+        if (progressAnimFrame) {
+            cancelAnimationFrame(progressAnimFrame);
+            progressAnimFrame = null;
+        }
+    }
+
+    // Seeking — click on the progress bar to jump to that position
+    function seekTrack(event) {
+        if (currentTrackIndex === -1 || !musicData[currentTrackIndex].audio) return;
+        const bar = event.currentTarget;
+        const rect = bar.getBoundingClientRect();
+        const pct = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+
+        audioPlayer.currentTime = pct * audioPlayer.duration;
+        document.getElementById('player-progress-fill').style.width = (pct * 100) + '%';
+        document.getElementById('player-time-current').textContent = formatTime(audioPlayer.currentTime);
+    }
+</script>
+</body>
+
+</html>
